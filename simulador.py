@@ -46,6 +46,9 @@ class Torneio(object):
         with open("reputacao.csv", mode) as f:
             f.seek(0)
             f.write(','.join(jogadores)+'\n')
+        with open("recompensa.csv", mode) as f:
+            f.seek(0)
+            f.write('recompensa' +'\n')
 
     def roda_rodada(self):
         """
@@ -56,7 +59,7 @@ class Torneio(object):
         print("Iniciando Rodada {}".format(self.rodada))
         jogadores_randomizados = self.jogadores.keys()
         random.shuffle(jogadores_randomizados)
-        m = random.randrange(0, self.p-1)
+        m = random.randrange(0, self.p*(self.p-1))
         self.M.append(m)
         reputacoes = [self.historico[nome]["reputacao"][-1] for nome in jogadores_randomizados]
         escolhas = {}
@@ -70,7 +73,8 @@ class Torneio(object):
             self.historico[nome]["descansou"] += sum(e == 'd' for e in escolhas[nome][0])
         saldo = self.calcula_resultado_cacadas(escolhas)
         recompensa, cacadas = self.calcula_recompensa(escolhas)
-        print "=> Recompensa: ", recompensa
+        with open("recompensa.csv", "a") as f:
+            f.write(str(recompensa) + "\n")
         for nome, jogador in self.jogadores.iteritems():
             jogador.resultado_da_cacada(saldo)
             jogador.fim_da_rodada(recompensa, self.M[-1], cacadas)
@@ -89,7 +93,7 @@ class Torneio(object):
         cooperadores = []
         for nome_jogador, cacadas in escolhas.iteritems():
             for decisao, adversario in zip(*cacadas):
-                gasto = 2 if decisao == 'd' else 6
+                gasto = -2 if decisao == 'd' else -6
                 ganho_pessoal = 6 if decisao == 'c' else 0
                 adversario_cooperou = escolhas[adversario][0][tuple(escolhas[adversario][1]).index(nome_jogador)] == 'c'
                 ganho_adversario = 6 if adversario_cooperou else 0
