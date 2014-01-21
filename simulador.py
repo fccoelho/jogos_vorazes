@@ -1,17 +1,17 @@
 # coding: utf8
 __author__ = 'fccoelho'
 
-
-
 import pkgutil
 import importlib
 from collections import defaultdict
 import random
 import copy
-
+import os
 
 jogadores = [name for _,name,_ in pkgutil.iter_modules(['estrategias'])]
 jogadores.remove('jogadores')
+
+
 
 class Torneio(object):
     def __init__(self):
@@ -20,6 +20,8 @@ class Torneio(object):
         self.cemiterio = []
         self.rodada = 0
         self.M = [] #série de m
+        self.inicializa_saida()
+
 
     @property
     def p(self):
@@ -32,6 +34,18 @@ class Torneio(object):
         for nome, jogador in self.jogadores.iteritems():
             self.historico[nome]["comida"].append(300*(self.p-1))
             self.historico[nome]["reputacao"].append(0)
+
+    def inicializa_saida(self):
+        if os.path.exists("comida.csv"):
+            mode = "w+"
+        else:
+            mode = "w"
+        with open("comida.csv", mode) as f:
+            f.seek(0)
+            f.write(','.join(jogadores)+'\n')
+        with open("reputacao.csv", mode) as f:
+            f.seek(0)
+            f.write(','.join(jogadores)+'\n')
 
     def roda_rodada(self):
         """
@@ -56,14 +70,12 @@ class Torneio(object):
             self.historico[nome]["descansou"] += sum(e == 'd' for e in escolhas[nome][0])
         saldo = self.calcula_resultado_cacadas(escolhas)
         recompensa, cacadas = self.calcula_recompensa(escolhas)
-        print recompensa
+        print "=> Recompensa: ", recompensa
         for nome, jogador in self.jogadores.iteritems():
             jogador.resultado_da_cacada(saldo)
             jogador.fim_da_rodada(recompensa, self.M[-1], cacadas)
         self.atualiza_reputacao()
         self.atualiza_comida(saldo, recompensa)
-
-
 
     def calcula_resultado_cacadas(self, escolhas):
         """
@@ -83,7 +95,6 @@ class Torneio(object):
                 ganho_adversario = 6 if adversario_cooperou else 0
                 saldo[nome_jogador].append(gasto + (ganho_pessoal+ganho_adversario)/2.)
             self.jogadores[nome_jogador].resultado_da_cacada(saldo[nome_jogador])
-        print saldo
         return saldo
 
     def atualiza_comida(self, saldo, recompensa):
@@ -116,18 +127,32 @@ class Torneio(object):
     def vai(self):
         while True:
             self.roda_rodada()
+            self.plota_series()
             if self.checa_fim():
                 break
-                print self.jogadores.keys()
             elif self.rodada > 10000:
                 for nome in self.historico.keys():
                     print nome, self.historico[nome]["comida"][-1], self.historico[nome]["comida"][-1]
                 break
 
+    def plota_series(self):
+        f = open("comida.csv", "a")
+        g = open("reputacao.csv", "a")
+        comida_t = []
+        reputacao_t = []
+        for j in self.historico.itervalues():
+            comida_t.append(str(j["comida"][-1]))
+            reputacao_t.append(str(j["reputacao"][-1]))
+        f.write(",".join(comida_t) + "\n")
+        g.write(",".join(reputacao_t) + "\n")
+        f.close()
+        g.close()
+
 if __name__ == "__main__":
     T = Torneio()
     T.inicializa_jogadores()
     T.vai()
+
 
 
 
