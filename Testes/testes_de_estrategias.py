@@ -16,7 +16,7 @@ class Teste_Jogador(unittest.TestCase):
 
     def testa_escolha_de_cacadas_retorna_lista(self):
         for J in self.Jogadores:
-            escolhas = J.escolha_de_cacada(1,100, 32, 65, range(123))
+            escolhas = J.escolha_de_cacada(1, 100, 32, 65, range(123))
             self.assertEqual(len(escolhas), 123)
 
     def testa_estrutura_da_classe(self):
