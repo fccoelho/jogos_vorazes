@@ -15,6 +15,11 @@ class TesteSimulador(unittest.TestCase):
         for i in self.torneio.jogadores.itervalues():
             self.assertIsInstance(i, Jogador)
 
+    def testa_escolhas_dos_jogadores(self):
+        self.torneio.inicializa_jogadores()
+        for nome, j in self.torneio.jogadores.iteritems():
+            self.assertEqual(j.escolha_de_cacada(1, 100, 32, 65, range(len(self.torneio.jogadores)-1)), len(self.torneio.jogadores)-1)
+
     def testa_nome_dos_jogadores(self):
         self.torneio.inicializa_jogadores()
         self.assertIn('FlavioCoelho', self.torneio.jogadores)
@@ -23,6 +28,14 @@ class TesteSimulador(unittest.TestCase):
         self.assertEqual(self.torneio.p, 0)
         self.torneio.inicializa_jogadores()
         assert self.torneio.p > 0
+
+    def testa_1_rodada(self):
+        self.torneio.inicializa_jogadores()
+        self.torneio.vai(1)
+
+    def testa_10_rodadas(self):
+        self.torneio.inicializa_jogadores()
+        self.torneio.vai(10)
 
     def testa_inicializacao_dos_jogadores(self):
         self.torneio.inicializa_jogadores()

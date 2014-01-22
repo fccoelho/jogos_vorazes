@@ -61,11 +61,12 @@ class Torneio(object):
         random.shuffle(jogadores_randomizados)
         m = random.randrange(0, self.p*(self.p-1))
         self.M.append(m)
-        reputacoes = [self.historico[nome]["reputacao"][-1] for nome in jogadores_randomizados]
         escolhas = {}
-        for nome, jogador in self.jogadores.iteritems():
+        for nome in jogadores_randomizados:
+            jogador = self.jogadores[nome]
             adversarios = copy.copy(jogadores_randomizados)
             adversarios.remove(nome)
+            reputacoes = [self.historico[nome_adv]["reputacao"][-1] for nome_adv in adversarios]
             escolhas[nome] = (jogador.escolha_de_cacada(self.rodada, self.historico[nome]["comida"][-1],
                                       self.historico[nome]["reputacao"][-1],
                                       m, reputacoes), adversarios)
@@ -95,6 +96,7 @@ class Torneio(object):
             for decisao, adversario in zip(*cacadas):
                 gasto = -2 if decisao == 'd' else -6
                 ganho_pessoal = 6 if decisao == 'c' else 0
+                #print len(escolhas[adversario][0]), tuple(escolhas[adversario][1]).index(nome_jogador)
                 adversario_cooperou = escolhas[adversario][0][tuple(escolhas[adversario][1]).index(nome_jogador)] == 'c'
                 ganho_adversario = 6 if adversario_cooperou else 0
                 saldo[nome_jogador].append(gasto + (ganho_pessoal+ganho_adversario)/2.)
@@ -114,7 +116,7 @@ class Torneio(object):
 
     def enterra(self, nome):
         self.jogadores.pop(nome)
-        self.cemiterio.append(nome)
+        self.cemiterio.append((nome, self.rodada))
 
     def calcula_recompensa(self, escolhas):
         cacadas = 0
@@ -128,16 +130,25 @@ class Torneio(object):
             return True
         return False
 
-    def vai(self):
+    def vai(self, max_rodadas=10000):
         while True:
             self.roda_rodada()
             self.plota_series()
             if self.checa_fim():
+                self.anuncia_vencedor()
                 break
-            elif self.rodada > 10000:
+            elif self.rodada > max_rodadas:
                 for nome in self.historico.keys():
                     print nome, self.historico[nome]["comida"][-1], self.historico[nome]["comida"][-1]
+                self.anuncia_vencedor()
                 break
+
+    def anuncia_vencedor(self):
+        ranking = [(nome, data["comida"][-1]) for nome,data in self.historico.iteritems()]
+        ranking = sorted(ranking, key=lambda x: x[1], reverse=True)
+        print "==> Em Terceiro lugar...: {} com {}".format(ranking[2][0], ranking[2][1])
+        print "==> Em Segundo lugar...: {} com {}".format(ranking[1][0], ranking[1][1])
+        print "==> Em Primeiro lugar...: {} com {}".format(ranking[0][0], ranking[0][1])
 
     def plota_series(self):
         f = open("comida.csv", "a")
@@ -155,7 +166,7 @@ class Torneio(object):
 if __name__ == "__main__":
     T = Torneio()
     T.inicializa_jogadores()
-    T.vai()
+    T.vai(60000)
 
 
 
