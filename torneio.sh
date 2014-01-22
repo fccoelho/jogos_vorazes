@@ -1,6 +1,7 @@
 #!/bin/sh
 
 if [-e "comida.csv"]
+then
     rm comida.csv
     rm reputacao.csv
     rm.recompensa.csv
@@ -10,4 +11,4 @@ touch comida.csv
 touch comida.csv
 touch comida.csv
 
-python simulador.py
+pypy simulador.py

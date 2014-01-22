@@ -20,7 +20,7 @@ class Torneio(object):
         self.cemiterio = []
         self.rodada = 0
         self.M = [] #série de m
-        self.inicializa_saida()
+
 
 
     @property
@@ -34,21 +34,17 @@ class Torneio(object):
         for nome, jogador in self.jogadores.iteritems():
             self.historico[nome]["comida"].append(300*(self.p-1))
             self.historico[nome]["reputacao"].append(0)
+        self.inicializa_saida()
 
     def inicializa_saida(self):
-        if os.path.exists("comida.csv"):
-            mode = "w+"
-        else:
-            mode = "w"
+        mode = "w"
+        cabecalho = ','.join(self.historico.keys()) + '\n'
         with open("comida.csv", mode) as f:
-            f.seek(0)
-            f.write(','.join(jogadores)+'\n')
+            f.write(cabecalho)
         with open("reputacao.csv", mode) as f:
-            f.seek(0)
-            f.write(','.join(jogadores)+'\n')
+            f.write(cabecalho)
         with open("recompensa.csv", mode) as f:
-            f.seek(0)
-            f.write('recompensa' +'\n')
+            f.write(cabecalho)
 
     def roda_rodada(self):
         """
@@ -139,13 +135,14 @@ class Torneio(object):
                 break
             elif self.rodada > max_rodadas:
                 for nome in self.historico.keys():
-                    print nome, self.historico[nome]["comida"][-1], self.historico[nome]["comida"][-1]
+                    print nome, self.historico[nome]["comida"][-1], self.historico[nome]["reputacao"][-1]
                 self.anuncia_vencedor()
                 break
 
     def anuncia_vencedor(self):
-        ranking = [(nome, data["comida"][-1]) for nome,data in self.historico.iteritems()]
-        ranking = sorted(ranking, key=lambda x: x[1], reverse=True)
+        ranking1 = [(nome, data["comida"][-1]) for nome,data in self.historico.iteritems()]
+        ranking = sorted(ranking1, key=lambda x: x[1], reverse=True)
+        print ranking
         print "==> Em Terceiro lugar...: {} com {}".format(ranking[2][0], ranking[2][1])
         print "==> Em Segundo lugar...: {} com {}".format(ranking[1][0], ranking[1][1])
         print "==> Em Primeiro lugar...: {} com {}".format(ranking[0][0], ranking[0][1])
