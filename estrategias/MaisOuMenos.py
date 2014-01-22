@@ -13,7 +13,7 @@ class MeuJogador(Jogador):
     """
     Caca com quem tem reputação dentro de certo limite
     """
-    def __init__(self, linf=0.3, lsup=0.6):
+    def __init__(self, linf=0.3, lsup=0.8):
         self.linf = linf
         self.lsup = lsup
         self._name = "MaisOuMenos"

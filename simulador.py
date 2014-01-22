@@ -52,7 +52,8 @@ class Torneio(object):
 
         """
         self.rodada += 1
-        print("Iniciando Rodada {}".format(self.rodada))
+        if self.rodada%1000 == 0:
+            print("Iniciando Rodada {}".format(self.rodada))
         jogadores_randomizados = self.jogadores.keys()
         random.shuffle(jogadores_randomizados)
         m = random.randrange(0, self.p*(self.p-1))
@@ -111,6 +112,7 @@ class Torneio(object):
             self.historico[nome]["reputacao"].append(self.historico[nome]["cacou"] / (float(self.historico[nome]["cacou"] + self.historico[nome]["descansou"])))
 
     def enterra(self, nome):
+        print("{} Morreu na rodada {}".format(nome, self.rodada))
         self.jogadores.pop(nome)
         self.cemiterio.append((nome, self.rodada))
 
@@ -163,7 +165,7 @@ class Torneio(object):
 if __name__ == "__main__":
     T = Torneio()
     T.inicializa_jogadores()
-    T.vai(60000)
+    T.vai(1000000)
 
 
 
