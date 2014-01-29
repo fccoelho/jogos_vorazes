@@ -15,6 +15,12 @@ class TesteSimulador(unittest.TestCase):
         for i in self.torneio.jogadores.itervalues():
             self.assertIsInstance(i, Jogador)
 
+    def testa_comida_inicial(self):
+        self.torneio.inicializa_jogadores()
+        for J in self.torneio.jogadores.keys():
+            self.assertEqual(self.torneio.historico[J]["comida"][0], 300*(self.torneio.p - 1))
+
+    @unittest.skip
     def testa_escolhas_dos_jogadores(self):
         self.torneio.inicializa_jogadores()
         for nome, j in self.torneio.jogadores.iteritems():

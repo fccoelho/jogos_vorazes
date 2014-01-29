@@ -114,6 +114,7 @@ class Torneio(object):
     def enterra(self, nome):
         print("{} Morreu na rodada {}".format(nome, self.rodada))
         self.jogadores.pop(nome)
+        print "Restam {} jogadores".format(len(self.jogadores))
         self.cemiterio.append((nome, self.rodada))
 
     def calcula_recompensa(self, escolhas):
@@ -166,7 +167,6 @@ if __name__ == "__main__":
     T = Torneio()
     T.inicializa_jogadores()
     T.vai(1000000)
-
 
 
 
