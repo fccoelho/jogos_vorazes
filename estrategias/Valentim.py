@@ -1,6 +1,7 @@
 # -*- coding: cp1252 -*-
 from jogadores import Jogador
 
+
 class MeuJogador(Jogador):
     def __init__(self):
         self.comida = 0
@@ -20,11 +21,12 @@ class MeuJogador(Jogador):
         """
         if rodada < 100:
             escolhas = ['c' for x in reputacoes_dos_jogadores]
-            return escolhas        
+            return escolhas
         elif reputacao_atual > 0.8 and comida_atual > 10:
             escolhas = ['d' for x in reputacoes_dos_jogadores]
             return escolhas
-        elif (comida_atual < len(reputacoes_dos_jogadores)*2) and (self.numero_de_cacadores <= len(reputacoes_dos_jogadores)/2):
+        elif (comida_atual < len(reputacoes_dos_jogadores) * 2) and (
+            self.numero_de_cacadores <= len(reputacoes_dos_jogadores) / 2):
             escolhas = ['c' for x in reputacoes_dos_jogadores]
             return escolhas
         elif comida_atual < 10:
@@ -43,7 +45,7 @@ class MeuJogador(Jogador):
         
         adicione código para atualizar suas variáveis internas 
         """
-        pass 
+        pass
 
     def fim_da_rodada(self, recompensa, m, numero_de_cacadores):
         """
