@@ -18,7 +18,7 @@ class TesteSimulador(unittest.TestCase):
     def testa_escolhas_dos_jogadores(self):
         self.torneio.inicializa_jogadores()
         for nome, j in self.torneio.jogadores.iteritems():
-            self.assertEqual(j.escolha_de_cacada(1, 100, 32, 65, range(len(self.torneio.jogadores)-1)), len(self.torneio.jogadores)-1)
+            self.assertEqual(len(j.escolha_de_cacada(1, 100, 32, 65, range(len(self.torneio.jogadores)-1))), len(self.torneio.jogadores)-1)#, msg="Bug na Estrategia: {}".format(nome))
 
     def testa_nome_dos_jogadores(self):
         self.torneio.inicializa_jogadores()
