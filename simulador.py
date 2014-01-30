@@ -52,21 +52,26 @@ class Torneio(object):
 
         """
         self.rodada += 1
-        if self.rodada%1000 == 0:
+        if self.rodada%5000 == 0:
             print("Iniciando Rodada {}".format(self.rodada))
         jogadores_randomizados = self.jogadores.keys()
         random.shuffle(jogadores_randomizados)
         m = random.randrange(0, self.p*(self.p-1))
         self.M.append(m)
         escolhas = {}
+        bugados = []
         for nome in jogadores_randomizados:
             jogador = self.jogadores[nome]
             adversarios = copy.copy(jogadores_randomizados)
             adversarios.remove(nome)
             reputacoes = [self.historico[nome_adv]["reputacao"][-1] for nome_adv in adversarios]
-            escolhas[nome] = (jogador.escolha_de_cacada(self.rodada, self.historico[nome]["comida"][-1],
+            try:
+                escolhas[nome] = (jogador.escolha_de_cacada(self.rodada, self.historico[nome]["comida"][-1],
                                       self.historico[nome]["reputacao"][-1],
                                       m, reputacoes), adversarios)
+            except Exception as e:
+                escolhas[nome] = (['c' for i in reputacoes],adversarios)
+                bugados.append(nome)
             self.historico[nome]["cacou"] += sum(e == 'c' for e in escolhas[nome][0])
             self.historico[nome]["descansou"] += sum(e == 'd' for e in escolhas[nome][0])
         saldo = self.calcula_resultado_cacadas(escolhas)
@@ -78,6 +83,9 @@ class Torneio(object):
             jogador.fim_da_rodada(recompensa, self.M[-1], cacadas)
         self.atualiza_reputacao()
         self.atualiza_comida(saldo, recompensa)
+        for nome in bugados: # Bug no código é pena de morte
+            self.enterra(nome)
+            print("{} Morreu na rodada {}".format(nome, self.rodada))
 
     def calcula_resultado_cacadas(self, escolhas):
         """
@@ -112,10 +120,10 @@ class Torneio(object):
             self.historico[nome]["reputacao"].append(self.historico[nome]["cacou"] / (float(self.historico[nome]["cacou"] + self.historico[nome]["descansou"])))
 
     def enterra(self, nome):
-        print("{} Morreu na rodada {}".format(nome, self.rodada))
         self.jogadores.pop(nome)
         print "Restam {} jogadores".format(len(self.jogadores))
         self.cemiterio.append((nome, self.rodada))
+        print("{} Morreu na rodada {}".format(nome, self.rodada))
 
     def calcula_recompensa(self, escolhas):
         cacadas = 0
