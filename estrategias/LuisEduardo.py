@@ -18,43 +18,51 @@ class MeuJogador(Jogador):
      
         media = self.calcula_media(reputacoes_dos_jogadores)
         desvio = self.calcula_desvio(reputacoes_dos_jogadores)
-        escolhas = ['c']*len(reputacoes_dos_jogadores) 
+        escolhas = ['c']*len(reputacoes_dos_jogadores)
+         
+        if len(reputacoes_dos_jogadores) > 5:
             
-        if rodada < 31:                        
-   
-            for x in reputacoes_dos_jogadores:
-                if(reputacao_atual < media):
-                    if x < (media - 1.5*desvio) or x > (media + 3*desvio):
-                        escolhas[reputacoes_dos_jogadores.index(x)] = 'd'
-                else:
-                    if x < (media - desvio) or x > (media + 2*desvio):
-                        escolhas[reputacoes_dos_jogadores.index(x)] = 'd'
-                        
-        elif (rodada > 30 and rodada < 71):
-            
-            if reputacao_atual > media:
-                if rodada % 7 == 0:
-                    escolhas = ['d' for x in reputacoes_dos_jogadores]
-                else:
-                    for x in reputacoes_dos_jogadores:
+            if rodada < 31:                        
+    
+                for x in reputacoes_dos_jogadores:
+                    if(reputacao_atual < media):
+                        if x < (media - 1.5*desvio) or x > (media + 3*desvio):
+                            escolhas[reputacoes_dos_jogadores.index(x)] = 'd'
+                    else:
                         if x < (media - desvio) or x > (media + 2*desvio):
                             escolhas[reputacoes_dos_jogadores.index(x)] = 'd'
-                        else:
-                            if x < (media - 1.5*desvio) or x > (media + 3*desvio):
+                            
+            elif (rodada > 30 and rodada < 71):
+                
+                if reputacao_atual > media:
+                    if rodada % 7 == 0:
+                        escolhas = ['d' for x in reputacoes_dos_jogadores]
+                    else:
+                        for x in reputacoes_dos_jogadores:
+                            if x < (media - desvio) or x > (media + 2*desvio):
                                 escolhas[reputacoes_dos_jogadores.index(x)] = 'd'
-                    
+                else:
+                    for x in reputacoes_dos_jogadores:
+                        if x < (media - 1.5*desvio) or x > (media + 3*desvio):
+                            escolhas[reputacoes_dos_jogadores.index(x)] = 'd'
+                        
+            else:
+                
+                if reputacao_atual > media:
+                    if rodada % 2 == 0:
+                        escolhas = ['d' for x in reputacoes_dos_jogadores]
+                    else:
+                        for x in reputacoes_dos_jogadores:
+                            if x < (media - desvio) or x > (media + 2*desvio):
+                                escolhas[reputacoes_dos_jogadores.index(x)] = 'd'
+                            
+                else:
+                    for x in reputacoes_dos_jogadores:
+                        if x < (media - 1.5*desvio) or x > (media + 3*desvio):
+                            escolhas[reputacoes_dos_jogadores.index(x)] = 'd'
+            
         else:
             
-            if reputacao_atual > media:
-                if rodada % 2 == 0:
-                    escolhas = ['d' for x in reputacoes_dos_jogadores]
-                else:
-                    for x in reputacoes_dos_jogadores:
-                        if x < (media - desvio) or x > (media + 2*desvio):
-                            escolhas[reputacoes_dos_jogadores.index(x)] = 'd'
+            escolhas = ['d' for x in reputacoes_dos_jogadores]        
                         
-                        else:
-                            if x < (media - 1.5*desvio) or x > (media + 3*desvio):
-                                escolhas[reputacoes_dos_jogadores.index(x)] = 'd'
-            
         return escolhas
