@@ -1,11 +1,11 @@
 # -*- coding: utf8 -*-
-from jogadores import Jogador
+from .jogadores import Jogador
 
 class MeuJogador(Jogador):
     reputacao_meta = 0.5
     reputacao_minima_aceitavel = 0.3
     reputacao_atual_copia = 0
-    historico_minha_reputacao =[]
+    historico_minha_reputacao =[0]
     historico_num_cacadores =[]
     def escolha_de_cacada(self, rodada, comida_atual, reputacao_atual, m, reputacoes_dos_jogadores):
         escolhas = []
@@ -40,6 +40,7 @@ class MeuJogador(Jogador):
             if maximo > self.historico_num_cacadores[i]:
                 maximo = self.historico_num_cacadores[i]
                 pos = i
+        #print(pos, len(self.historico_minha_reputacao))
         self.reputacao_meta = self.historico_minha_reputacao[pos] + random.randrange(-100,100)/1000
         self.reputacao_meta = max(0.1, self.reputacao_meta)
         self.reputacao_meta = min(0.9,self.reputacao_meta)

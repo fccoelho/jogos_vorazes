@@ -6,7 +6,7 @@
  reimplementar os métodos escolha_de_cacada, resultado_da_cacada e 
 """
 
-from jogadores import Jogador
+from .jogadores import Jogador
 
 class MeuJogador(Jogador):
     def __init__(self,):

@@ -1,5 +1,5 @@
 # coding: utf8
-from jogadores import Jogador
+from .jogadores import Jogador
 """
  Jogador básico
  O seu Jogador deve ser implementado como uma subclasse de Jogador,

@@ -7,7 +7,7 @@ license: GPL V3 or Later
 
 __docformat__ = 'restructuredtext en'
 
-from jogadores import Jogador
+from .jogadores import Jogador
 import random
 
 class MeuJogador(Jogador):

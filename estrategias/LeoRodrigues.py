@@ -1,12 +1,13 @@
 # -*- coding: utf8 -*-
-from jogadores import Jogador
+from .jogadores import Jogador
         
 class MeuJogador(Jogador):
     def percent(self,data,percentil):
         data = sorted(data)
         n = len(data)
         if n == 0:
-            print "Lista vazia"
+            pass
+            #print ("Lista vazia")
         else:
             return int(round(percentil*n+1))
         

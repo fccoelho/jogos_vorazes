@@ -1,6 +1,6 @@
 __author__ = 'fccoelho'
 
-from jogadores import Jogador
+from .jogadores import Jogador
 
 
 class MeuJogador(Jogador):

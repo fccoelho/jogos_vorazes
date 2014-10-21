@@ -6,7 +6,7 @@
  reimplementar os métodos escolha_de_cacada, resultado_da_cacada e 
 """
 import math
-from jogadores import Jogador
+from .jogadores import Jogador
 def somar(*valores):
     soma = 0
     for v in valores:

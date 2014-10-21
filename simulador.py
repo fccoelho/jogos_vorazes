@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # coding: utf8
 __author__ = 'fccoelho'
 
@@ -31,7 +32,7 @@ class Torneio(object):
 
     def inicializa_jogadores(self):
         self.jogadores = {x : importlib.import_module("estrategias.{}".format(x)).MeuJogador() for x in jogadores}
-        for nome, jogador in self.jogadores.iteritems():
+        for nome, jogador in self.jogadores.items():
             self.historico[nome]["comida"].append(300*(self.p-1))
             self.historico[nome]["reputacao"].append(0)
         self.inicializa_saida()
@@ -54,7 +55,7 @@ class Torneio(object):
         self.rodada += 1
         if self.rodada%5000 == 0:
             print("Iniciando Rodada {}".format(self.rodada))
-        jogadores_randomizados = self.jogadores.keys()
+        jogadores_randomizados = list(self.jogadores.keys())
         random.shuffle(jogadores_randomizados)
         m = random.randrange(0, self.p*(self.p-1))
         self.M.append(m)
@@ -64,11 +65,11 @@ class Torneio(object):
             jogador = self.jogadores[nome]
             adversarios = copy.copy(jogadores_randomizados)
             adversarios.remove(nome)
-            reputacoes = [self.historico[nome_adv]["reputacao"][-1] for nome_adv in adversarios]
+            reputacoes = tuple([self.historico[nome_adv]["reputacao"][-1] for nome_adv in adversarios])
             try:
                 escolhas[nome] = (jogador.escolha_de_cacada(self.rodada, self.historico[nome]["comida"][-1],
                                       self.historico[nome]["reputacao"][-1],
-                                      m, reputacoes), adversarios)
+                                      m, reputacoes), tuple(adversarios))
             except Exception as e:
                 escolhas[nome] = (['c' for i in reputacoes],adversarios)
                 bugados.append(nome)
@@ -78,7 +79,7 @@ class Torneio(object):
         recompensa, cacadas = self.calcula_recompensa(escolhas)
         with open("recompensa.csv", "a") as f:
             f.write(str(recompensa) + "\n")
-        for nome, jogador in self.jogadores.iteritems():
+        for nome, jogador in self.jogadores.items():
             jogador.resultado_da_cacada(saldo)
             jogador.fim_da_rodada(recompensa, self.M[-1], cacadas)
         self.atualiza_reputacao()
@@ -97,7 +98,7 @@ class Torneio(object):
         """
         saldo = defaultdict(lambda: [])  # saldo de todos as cacadas por jogador
         cooperadores = []
-        for nome_jogador, cacadas in escolhas.iteritems():
+        for nome_jogador, cacadas in escolhas.items():
             for decisao, adversario in zip(*cacadas):
                 gasto = -2 if decisao == 'd' else -6
                 ganho_pessoal = 6 if decisao == 'c' else 0
@@ -109,25 +110,25 @@ class Torneio(object):
         return saldo
 
     def atualiza_comida(self, saldo, recompensa):
-        for nome, comida in saldo.iteritems():
+        for nome, comida in saldo.items():
             comida_atual = self.historico[nome]["comida"][-1]
             self.historico[nome]["comida"].append(comida_atual + sum(comida) + recompensa)
             if self.historico[nome]["comida"][-1] <= 0:
                 self.enterra(nome)
 
     def atualiza_reputacao(self):
-        for nome in self.jogadores.iterkeys():
+        for nome in self.jogadores.keys():
             self.historico[nome]["reputacao"].append(self.historico[nome]["cacou"] / (float(self.historico[nome]["cacou"] + self.historico[nome]["descansou"])))
 
     def enterra(self, nome):
         self.jogadores.pop(nome)
-        print "Restam {} jogadores".format(len(self.jogadores))
+        print("Restam {} jogadores".format(len(self.jogadores)))
         self.cemiterio.append((nome, self.rodada))
         print("{} Morreu na rodada {}".format(nome, self.rodada))
 
     def calcula_recompensa(self, escolhas):
         cacadas = 0
-        for e in escolhas.iteritems():
+        for e in escolhas.items():
             cacadas += sum([i == 'c' for i in e[1][0]]) # numero de vezes que este jogador cacou
         recompensa = 2*(self.p - 1) if cacadas > self.M[-1] else 0
         return recompensa, cacadas
@@ -146,24 +147,24 @@ class Torneio(object):
                 break
             elif self.rodada > max_rodadas:
                 for nome in self.historico.keys():
-                    print nome, self.historico[nome]["comida"][-1], self.historico[nome]["reputacao"][-1]
+                    print (nome, self.historico[nome]["comida"][-1], self.historico[nome]["reputacao"][-1])
                 self.anuncia_vencedor()
                 break
 
     def anuncia_vencedor(self):
-        ranking1 = [(nome, data["comida"][-1]) for nome,data in self.historico.iteritems()]
+        ranking1 = [(nome, data["comida"][-1]) for nome,data in self.historico.items()]
         ranking = sorted(ranking1, key=lambda x: x[1], reverse=True)
-        print ranking
-        print "==> Em Terceiro lugar...: {} com {}".format(ranking[2][0], ranking[2][1])
-        print "==> Em Segundo lugar...: {} com {}".format(ranking[1][0], ranking[1][1])
-        print "==> Em Primeiro lugar...: {} com {}".format(ranking[0][0], ranking[0][1])
+        print (ranking)
+        print ("==> Em Terceiro lugar...: {} com {}".format(ranking[2][0], ranking[2][1]))
+        print ("==> Em Segundo lugar...: {} com {}".format(ranking[1][0], ranking[1][1]))
+        print ("==> Em Primeiro lugar...: {} com {}".format(ranking[0][0], ranking[0][1]))
 
     def plota_series(self):
         f = open("comida.csv", "a")
         g = open("reputacao.csv", "a")
         comida_t = []
         reputacao_t = []
-        for j in self.historico.itervalues():
+        for j in self.historico.values():
             comida_t.append(str(j["comida"][-1]))
             reputacao_t.append(str(j["reputacao"][-1]))
         f.write(",".join(comida_t) + "\n")

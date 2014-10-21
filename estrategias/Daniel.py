@@ -1,4 +1,4 @@
-from jogadores import Jogador
+from .jogadores import Jogador
 lista_de_reputacoes=[]
 
 class MeuJogador(Jogador):

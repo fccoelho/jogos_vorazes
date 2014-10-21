@@ -1,5 +1,5 @@
 # -*- coding: cp1252 -*-
-from jogadores import Jogador
+from .jogadores import Jogador
 
 
 class MeuJogador(Jogador):
