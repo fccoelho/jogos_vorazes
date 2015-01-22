@@ -122,17 +122,17 @@ class Torneio(object):
             comida_atual = self.historico[nome]["comida"][-1]
             self.historico[nome]["comida"].append(comida_atual + sum(comida) + recompensa)
             if self.historico[nome]["comida"][-1] <= 0:
-                self.enterra(nome)
+                self.enterra(nome, self.historico[nome]["comida"][-1])
 
     def atualiza_reputacao(self):
         for nome in self.jogadores.keys():
             self.historico[nome]["reputacao"].append(self.historico[nome]["cacou"] / (float(self.historico[nome]["cacou"] + self.historico[nome]["descansou"])))
 
-    def enterra(self, nome):
+    def enterra(self, nome, comida):
         del self.jogadores[nome]
         print("Restam {} jogadores".format(len(self.jogadores)))
         self.cemiterio[nome] = self.rodada
-        print("{} Morreu na rodada {}".format(nome, self.rodada))
+        print("{} Morreu na rodada {} com {} pontos".format(nome, self.rodada, comida))
 
     def calcula_recompensa(self, escolhas):
         cacadas = 0
@@ -142,7 +142,7 @@ class Torneio(object):
         return recompensa, cacadas
 
     def checa_fim(self):
-        if len(self.jogadores) <= 1:
+        if len(self.jogadores) == 1:
             return True
         return False
 
@@ -160,13 +160,19 @@ class Torneio(object):
                 break
 
     def anuncia_vencedor(self):
-        ranking1 = [(nome, data["comida"][-1]) for nome,data in self.historico.items() if (nome not in self.cemiterio or nome not in self.bugados)]
+        ranking1 = [(nome, data["comida"][-1]) for nome,data in self.historico.items() if (data["comida"][-1]>0 and nome not in self.cemiterio and nome not in self.bugados)]
         ranking = sorted(ranking1, key=lambda x: x[1], reverse=True)
+        print ("Sobreviventes:")
         print (ranking)
-        print ("==> Em Terceiro lugar...: {} com {}".format(ranking[2][0], ranking[2][1]))
-        print ("==> Em Segundo lugar...: {} com {}".format(ranking[1][0], ranking[1][1]))
-        print ("==> Em Primeiro lugar...: {} com {}".format(ranking[0][0], ranking[0][1]))
+        if len(ranking1) >=3:
+            print ("==> Em Terceiro lugar...: {} com {}".format(ranking[2][0], ranking[2][1]))
+            print ("==> Em Segundo lugar...: {} com {}".format(ranking[1][0], ranking[1][1]))
+            print ("==> Em Primeiro lugar...: {} com {}".format(ranking[0][0], ranking[0][1]))
+        else:
+            print ("==> Em Primeiro lugar e único sobrevivente:... {} com {}".format(ranking[0][0], ranking[0][1]))
+        print ("Falecidos:")
         print(self.cemiterio)
+        print ("Banidos (bugados):")
         print(self.bugados)
 
     def plota_series(self):
