@@ -8,6 +8,8 @@ from collections import defaultdict
 import random
 import copy
 import os
+import pandas as pd
+import pylab as P
 
 jogadores = [name for _,name,_ in pkgutil.iter_modules(['estrategias'])]
 jogadores.remove('jogadores')
@@ -46,7 +48,7 @@ class Torneio(object):
         with open("reputacao.csv", mode) as f:
             f.write(cabecalho)
         with open("recompensa.csv", mode) as f:
-            f.write(cabecalho)
+            f.write("recompensa")
 
     def roda_rodada(self):
         """
@@ -79,8 +81,8 @@ class Torneio(object):
             self.historico[nome]["descansou"] += sum(e == 'd' for e in escolhas[nome][0])
         saldo = self.calcula_resultado_cacadas(escolhas)
         recompensa, cacadas = self.calcula_recompensa(escolhas)
-        with open("recompensa.csv", "a") as f:
-            f.write(str(recompensa) + "\n")
+        
+        R.write(str(recompensa) + "\n")
         for nome, jogador in self.jogadores.items():
             jogador.resultado_da_cacada(saldo)
             jogador.fim_da_rodada(recompensa, self.M[-1], cacadas)
@@ -128,7 +130,7 @@ class Torneio(object):
         for nome in self.jogadores.keys():
             self.historico[nome]["reputacao"].append(self.historico[nome]["cacou"] / (float(self.historico[nome]["cacou"] + self.historico[nome]["descansou"])))
 
-    def enterra(self, nome, comida):
+    def enterra(self, nome, comida=None):
         del self.jogadores[nome]
         print("Restam {} jogadores".format(len(self.jogadores)))
         self.cemiterio[nome] = self.rodada
@@ -147,9 +149,11 @@ class Torneio(object):
         return False
 
     def vai(self, max_rodadas=10000):
+        f = open("comida.csv", "a")
+        g = open("reputacao.csv", "a")
         while True:
             self.roda_rodada()
-            self.plota_series()
+            self.salva_series(f,g)
             if self.checa_fim():
                 self.anuncia_vencedor()
                 break
@@ -158,6 +162,8 @@ class Torneio(object):
                     print (nome, self.historico[nome]["comida"][-1], self.historico[nome]["reputacao"][-1])
                 self.anuncia_vencedor()
                 break
+        f.close()
+        g.close()
 
     def anuncia_vencedor(self):
         ranking1 = [(nome, data["comida"][-1]) for nome,data in self.historico.items() if (data["comida"][-1]>0 and nome not in self.cemiterio and nome not in self.bugados)]
@@ -175,9 +181,8 @@ class Torneio(object):
         print ("Banidos (bugados):")
         print(self.bugados)
 
-    def plota_series(self):
-        f = open("comida.csv", "a")
-        g = open("reputacao.csv", "a")
+    def salva_series(self, f, g):
+        
         comida_t = []
         reputacao_t = []
         for j in self.historico.values():
@@ -185,13 +190,23 @@ class Torneio(object):
             reputacao_t.append(str(j["reputacao"][-1]))
         f.write(",".join(comida_t) + "\n")
         g.write(",".join(reputacao_t) + "\n")
-        f.close()
-        g.close()
+        
+        
+    def plota_series(self):
+        comida = pd.read_csv('comida.csv')
+        reputacao = pd.read_csv('reputacao.csv')
+        comida.plot()
+        P.figure()
+        reputacao.plot()
 
 if __name__ == "__main__":
     T = Torneio()
     T.inicializa_jogadores()
+    R = open("recompensa.csv", "a")
     T.vai(500000)
+    R.close()
+    T.plota_series()
+    P.show()
 
 
 
