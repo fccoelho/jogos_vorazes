@@ -8,7 +8,7 @@ def carrega_dados(file_name):
         nomes = f.readline().strip().split(',')
 
     dados = np.genfromtxt(file_name, delimiter=',', skip_header=1)
-    print nomes, dados.size
+    print (nomes, dados.size)
 
 if __name__ == "__main__":
     carrega_dados("comida.csv")

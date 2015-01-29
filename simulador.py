@@ -9,7 +9,7 @@ import random
 import copy
 import os
 import pandas as pd
-import pylab as P
+import matplotlib.pyplot as P
 
 jogadores = [name for _,name,_ in pkgutil.iter_modules(['estrategias'])]
 jogadores.remove('jogadores')
@@ -201,10 +201,10 @@ class Torneio(object):
 
 if __name__ == "__main__":
     T = Torneio()
-    T.inicializa_jogadores()
-    R = open("recompensa.csv", "a")
-    T.vai(500000)
-    R.close()
+    #T.inicializa_jogadores()
+    #R = open("recompensa.csv", "a")
+    #T.vai(200000)
+    #R.close()
     T.plota_series()
     P.show()
 
