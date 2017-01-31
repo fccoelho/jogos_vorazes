@@ -3,7 +3,9 @@ import os
 os.chdir('..')
 import simulador
 from estrategias.jogadores import Jogador
+from io import StringIO
 
+simulador.R =  StringIO()
 
 class TesteSimulador(unittest.TestCase):
     def setUp(self):
@@ -12,7 +14,7 @@ class TesteSimulador(unittest.TestCase):
 
     def testa_instanciacao_dos_jogadores(self):
         self.torneio.inicializa_jogadores()
-        for i in self.torneio.jogadores.itervalues():
+        for i in self.torneio.jogadores.values():
             self.assertIsInstance(i, Jogador)
 
     def testa_comida_inicial(self):
@@ -45,7 +47,7 @@ class TesteSimulador(unittest.TestCase):
 
     def testa_inicializacao_dos_jogadores(self):
         self.torneio.inicializa_jogadores()
-        for dados in self.torneio.historico.itervalues():
+        for dados in self.torneio.historico.values():
             self.assertEqual(dados["reputacao"][-1], 0)
             self.assertEqual(dados["comida"][-1], 300*(self.torneio.p -1))
 
