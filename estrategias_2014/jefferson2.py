@@ -1,4 +1,4 @@
-from .jogadores import Jogador
+from estrategias.jogadores import Jogador
 
 
 class MeuJogador(Jogador):
@@ -7,7 +7,7 @@ class MeuJogador(Jogador):
         mediaReputacoes = sum(reputacoes_dos_jogadores) / len(reputacoes_dos_jogadores)
         escolhas = []
         for rep in reputacoes_dos_jogadores:
-            if rep >= mediaReputacoes:
+            if rep < mediaReputacoes:
                 escolhas.append('d')
             else:
                 escolhas.append('c')

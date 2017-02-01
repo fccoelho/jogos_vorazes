@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-from .jogadores import Jogador
+from estrategias.jogadores import Jogador
 class MeuJogador(Jogador):
 	def __init__(self):
 		Jogador.__init__(self)	

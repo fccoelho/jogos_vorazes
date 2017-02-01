@@ -7,7 +7,7 @@
 """
 
 import random
-from .jogadores import Jogador
+from estrategias.jogadores import Jogador
 
 class MeuJogador(Jogador):
     """

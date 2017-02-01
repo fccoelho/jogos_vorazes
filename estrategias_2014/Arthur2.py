@@ -1,5 +1,5 @@
 # coding: utf8
-from .jogadores import Jogador
+from estrategias.jogadores import Jogador
 import random
 
 class MeuJogador(Jogador):
