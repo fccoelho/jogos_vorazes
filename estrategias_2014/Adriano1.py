@@ -1,6 +1,6 @@
 # coding: utf8
 
-from .jogadores import Jogador
+from estrategias.jogadores import Jogador
 
 """
  Jogador básico

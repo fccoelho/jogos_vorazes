@@ -96,20 +96,27 @@ class Torneio(object):
         self.atualiza_reputacao()
         self.atualiza_comida(saldo, recompensa)
         #==== Monitor the situation
-        if self.rodada % 500 == 0:
-            window_size = 2000
-            com_series = [self.historico[nome]["comida"][-window_size:] for nome in jogadores if nome not in self.cemiterio]
-            jogs = [j for j in jogadores if j not in self.cemiterio]
-            xs = list(range(self.rodada, self.rodada+window_size))
-            self.comida_plot.lines(com_series, xs, jogs, "Comida por Jogador", 'lines', 0)
-            self.recompensa_plot.lines([self.recompensa[-window_size:]],xs,['recompensa'], "recompensa", 'lines', 0)
+        self.monitor()
         #=============
         for nome in self.bugados.keys():
             if nome in self.cemiterio:
                 continue
             # self.enterra(nome)
             print("{} Morreu bugado, na rodada {}. Erro: {}".format(nome, self.rodada, self.bugados[nome]))
-                
+
+    def monitor(self):
+        """
+        Plot simulation status using liveplots
+        :return:
+        """
+        if self.rodada % 500 == 0:
+            window_size = 2000
+            com_series = [self.historico[nome]["comida"][-window_size:] for nome in jogadores if
+                          nome not in self.cemiterio]
+            jogs = [j for j in jogadores if j not in self.cemiterio]
+            xs = list(range(self.rodada, self.rodada + window_size))
+            self.comida_plot.lines(com_series, xs, jogs, "Comida por Jogador", 'lines', 0)
+            self.recompensa_plot.lines([self.recompensa[-window_size:]], xs, ['recompensa'], "recompensa", 'lines', 0)
 
     def calcula_resultado_cacadas(self, escolhas):
         """
@@ -192,6 +199,7 @@ class Torneio(object):
         g.close()
 
     def anuncia_vencedor(self):
+        self.monitor()
         ranking1 = [(nome, data["comida"][-1]) for nome,data in self.historico.items() if (data["comida"][-1]>0 and nome not in self.cemiterio and nome not in self.bugados)]
         ranking = sorted(ranking1, key=lambda x: x[1], reverse=True)
         print ("Sobreviventes:")
@@ -206,7 +214,8 @@ class Torneio(object):
         print(self.cemiterio)
         print ("Banidos (bugados):")
         print(self.bugados)
-        self.comida_plot.close_plot()
+        # self.comida_plot.close_plot()
+        # self.recompensa_plot.close_plot()
 
     def salva_series(self, f, g):
         
@@ -232,7 +241,7 @@ if __name__ == "__main__":
     R = open("recompensa.csv", "a")
     T.vai(200000)
     #R.close()
-    T.plota_series()
+    # T.plota_series()
     P.show()
 
 
