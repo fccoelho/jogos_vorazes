@@ -94,9 +94,9 @@ class Torneio(object):
             jogador.fim_da_rodada(recompensa, self.M[-1], cacadas)
         self.atualiza_reputacao()
         self.atualiza_comida(saldo, recompensa)
-        #====Monitor the situation
-        if self.rodada % 100 == 0:
-            com_series = [self.historico[nome]["comida"] for nome in jogadores]
+        #==== Monitor the situation
+        if self.rodada % 1000 == 0:
+            com_series = [self.historico[nome]["comida"][:1000] for nome in jogadores if nome not in self.cemiterio]
             self.comida_plot.lines(com_series, [], jogadores, "Comida por Jogador", 'lines', 0)
         #=============
         for nome in self.bugados.keys():
