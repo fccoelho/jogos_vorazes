@@ -1,5 +1,5 @@
 # -*- coding: cp1252 -*-
-from .jogadores import Jogador
+from estrategias.jogadores import Jogador
 class MeuJogador(Jogador):
     def __init__(self):
         self.comida = 0
