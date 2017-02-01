@@ -10,6 +10,8 @@ import copy
 import os
 import pandas as pd
 import matplotlib.pyplot as P
+from liveplots.xmlrpcserver import rpc_plot
+import xmlrpc.client
 
 jogadores = [name for _,name,_ in pkgutil.iter_modules(['estrategias'])]
 jogadores.remove('jogadores')
@@ -25,6 +27,8 @@ class Torneio(object):
         self.rodada = 0
         self.bugados = {}
         self.M = [] #série de m
+        port = rpc_plot(persist=1)
+        self.comida_plot = xmlrpc.client.ServerProxy('http://localhost:{}'.format(port))
 
 
 
@@ -37,8 +41,8 @@ class Torneio(object):
     def inicializa_jogadores(self):
         self.jogadores = {x : importlib.import_module("estrategias.{}".format(x)).MeuJogador() for x in jogadores}
         for nome, jogador in self.jogadores.items():
-            self.historico[nome]["comida"].append(300*(self.p-1))
-            self.historico[nome]["reputacao"].append(0)
+            self.historico[nome]["comida"].append(300.0*(self.p-1))
+            self.historico[nome]["reputacao"].append(0.)
         self.inicializa_saida()
 
     def inicializa_saida(self):
@@ -59,7 +63,7 @@ class Torneio(object):
         self.rodada += 1
         if self.rodada%5000 == 0:
             print("Iniciando Rodada {}".format(self.rodada))
-        jogadores_randomizados = list(self.jogadores.keys())
+        jogadores_randomizados = [jog for jog in self.jogadores.keys() if jog not in self.bugados]
         random.shuffle(jogadores_randomizados)
         m = random.randrange(0, self.p*(self.p-1))
         self.M.append(m)
@@ -77,6 +81,7 @@ class Torneio(object):
             except Exception as e:
                 escolhas[nome] = (['c' for i in reputacoes],adversarios)
                 self.bugados[nome] = (self.rodada, e)
+                self.cemiterio[nome] = self.rodada
                 
             self.historico[nome]["cacou"] += sum(e == 'c' for e in escolhas[nome][0])
             self.historico[nome]["descansou"] += sum(e == 'd' for e in escolhas[nome][0])
@@ -89,11 +94,16 @@ class Torneio(object):
             jogador.fim_da_rodada(recompensa, self.M[-1], cacadas)
         self.atualiza_reputacao()
         self.atualiza_comida(saldo, recompensa)
+        #====Monitor the situation
+        if self.rodada % 100 == 0:
+            com_series = [self.historico[nome]["comida"] for nome in jogadores]
+            self.comida_plot.lines(com_series, [], jogadores, "Comida por Jogador", 'lines', 0)
+        #=============
         for nome in self.bugados.keys():
             if nome in self.cemiterio:
                 continue
-            self.enterra(nome)
-            print("{} Morreu bugado, na rodada {}".format(nome, self.rodada))
+            # self.enterra(nome)
+            print("{} Morreu bugado, na rodada {}. Erro: {}".format(nome, self.rodada, self.bugados[nome]))
                 
 
     def calcula_resultado_cacadas(self, escolhas):
@@ -118,21 +128,30 @@ class Torneio(object):
         return saldo
 
     def atualiza_comida(self, saldo, recompensa):
-        for nome, comida in saldo.items():
+        jogadores = copy.deepcopy(self.jogadores)
+        for nome in jogadores:
+            comida = saldo[nome]
             if nome in self.cemiterio:
-                print("alimentando um Morto!!")
-                continue
-            comida_atual = self.historico[nome]["comida"][-1]
-            self.historico[nome]["comida"].append(comida_atual + sum(comida) + recompensa)
+                # print("{} está morto, zerando a comida!!".format(nome))
+                self.historico[nome]["comida"].append(0.0)
+            else:
+                comida_atual = float(self.historico[nome]["comida"][-1])
+                self.historico[nome]["comida"].append(float(comida_atual + sum(comida) + recompensa))
             if self.historico[nome]["comida"][-1] <= 0:
                 self.enterra(nome, self.historico[nome]["comida"][-1])
+        #  Feed the dead to keep series of equal length
+        for nome in self.cemiterio:
+            if nome in jogadores:
+                continue
+            self.historico[nome]["comida"].append(0.0)
 
     def atualiza_reputacao(self):
         for nome in self.jogadores.keys():
             self.historico[nome]["reputacao"].append(self.historico[nome]["cacou"] / (float(self.historico[nome]["cacou"] + self.historico[nome]["descansou"])))
 
-    def enterra(self, nome, comida=None):
+    def enterra(self, nome, comida=0):
         del self.jogadores[nome]
+        # self.historico[nome]["comida"].append(0.0) # Add an extra food item to maintain equal numbers of items
         print("Restam {} jogadores".format(len(self.jogadores)))
         self.cemiterio[nome] = self.rodada
         print("{} Morreu na rodada {} com {} pontos".format(nome, self.rodada, comida))
@@ -181,6 +200,7 @@ class Torneio(object):
         print(self.cemiterio)
         print ("Banidos (bugados):")
         print(self.bugados)
+        self.comida_plot.close_plot()
 
     def salva_series(self, f, g):
         
