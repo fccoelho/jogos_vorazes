@@ -23,12 +23,13 @@ class Torneio(object):
     def __init__(self):
         self.historico = defaultdict(lambda: {"comida": [], "reputacao": [], "cacou": 0, "descansou": 0})
         self.jogadores = None # dicionario com as instancias dos jogadores;
+        self.recompensa = []
         self.cemiterio = {}
         self.rodada = 0
         self.bugados = {}
         self.M = [] #série de m
-        port = rpc_plot(persist=1)
-        self.comida_plot = xmlrpc.client.ServerProxy('http://localhost:{}'.format(port))
+        self.comida_plot = xmlrpc.client.ServerProxy('http://localhost:{}'.format(rpc_plot(persist=1)))
+        self.recompensa_plot = xmlrpc.client.ServerProxy('http://localhost:{}'.format(rpc_plot(persist=1)))
 
 
 
@@ -95,9 +96,13 @@ class Torneio(object):
         self.atualiza_reputacao()
         self.atualiza_comida(saldo, recompensa)
         #==== Monitor the situation
-        if self.rodada % 1000 == 0:
-            com_series = [self.historico[nome]["comida"][:1000] for nome in jogadores if nome not in self.cemiterio]
-            self.comida_plot.lines(com_series, [], jogadores, "Comida por Jogador", 'lines', 0)
+        if self.rodada % 500 == 0:
+            window_size = 2000
+            com_series = [self.historico[nome]["comida"][-window_size:] for nome in jogadores if nome not in self.cemiterio]
+            jogs = [j for j in jogadores if j not in self.cemiterio]
+            xs = list(range(self.rodada, self.rodada+window_size))
+            self.comida_plot.lines(com_series, xs, jogs, "Comida por Jogador", 'lines', 0)
+            self.recompensa_plot.lines([self.recompensa[-window_size:]],xs,['recompensa'], "recompensa", 'lines', 0)
         #=============
         for nome in self.bugados.keys():
             if nome in self.cemiterio:
@@ -161,6 +166,7 @@ class Torneio(object):
         for e in escolhas.items():
             cacadas += sum([i == 'c' for i in e[1][0]]) # numero de vezes que este jogador cacou
         recompensa = 2*(self.p - 1) if cacadas > self.M[-1] else 0
+        self.recompensa.append(recompensa)
         return recompensa, cacadas
 
     def checa_fim(self):
