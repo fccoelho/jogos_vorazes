@@ -20,17 +20,17 @@ class MeuJogador(Jogador):
             if comida_atual <= 200:
                 escolhas = ['d' for x in reputacoes_dos_jogadores]
             else:
-                if n_jogadores <= 3:
+                if n_jogadores <= 4:
                     escolhas = ['d' for x in reputacoes_dos_jogadores]
                 else:
                     if reputacao_atual < 0.47:
                         escolhas = []
 
                         for x in reputacoes_dos_jogadores:
-                            if x >= 0.8:
+                            if x >= 0.70:
                                 escolhas.append(list(np.random.choice(['c', 'd'], size=1, p=(x, 1-x)))[0])
                             else:
-                                escolhas.append(list(np.random.choice(['c', 'd'], size=1, p=(x*0.15, 1 - x*0.15)))[0])
+                                escolhas.append(list(np.random.choice(['c', 'd'], size=1, p=(x*0.20, 1 - x*0.20)))[0])
                     else:
                         escolhas = []
 
