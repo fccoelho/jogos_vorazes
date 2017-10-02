@@ -109,12 +109,14 @@ class Torneio(object):
         Plot simulation status using liveplots
         :return:
         """
+        window_size = 1000
         if self.rodada % 500 == 0:
-            window_size = 2000
             com_series = [self.historico[nome]["comida"][-window_size:] for nome in jogadores if
                           nome not in self.cemiterio]
             jogs = [j for j in jogadores if j not in self.cemiterio]
-            xs = list(range(self.rodada, self.rodada + window_size))
+            xmin = self.rodada-window_size if self.rodada >= window_size else 0
+            xmax = self.rodada+window_size if self.rodada >= window_size else self.rodada
+            xs = list(range(xmin, xmax))
             self.comida_plot.lines(com_series, xs, jogs, "Comida por Jogador", 'lines', 0)
             self.recompensa_plot.lines([self.recompensa[-window_size:]], xs, ['recompensa'], "recompensa", 'lines', 0)
 
