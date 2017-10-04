@@ -62,7 +62,7 @@ class Torneio(object):
 
         """
         self.rodada += 1
-        if self.rodada%5000 == 0:
+        if self.rodada%500 == 0:
             print("Iniciando Rodada {}".format(self.rodada))
         jogadores_randomizados = [jog for jog in self.jogadores.keys() if jog not in self.bugados]
         random.shuffle(jogadores_randomizados)
@@ -104,16 +104,16 @@ class Torneio(object):
             # self.enterra(nome)
             print("{} Morreu bugado, na rodada {}. Erro: {}".format(nome, self.rodada, self.bugados[nome]))
 
-    def monitor(self):
+    def monitor(self, fim=False):
         """
         Plot simulation status using liveplots
         :return:
         """
-        window_size = 1000
-        if self.rodada % 500 == 0:
-            com_series = [self.historico[nome]["comida"][-window_size:] for nome in jogadores if
-                          nome not in self.cemiterio]
-            jogs = [j for j in jogadores if j not in self.cemiterio]
+        window_size = 2000
+        if self.rodada % 500 == 0 or fim:
+            com_series = [self.historico[nome]["comida"][-window_size:] for nome in jogadores] #if
+                         # nome not in self.cemiterio]
+            jogs = [j for j in jogadores ]#if j not in self.cemiterio]
             xmin = self.rodada-window_size if self.rodada >= window_size else 0
             xmax = self.rodada+window_size if self.rodada >= window_size else self.rodada
             xs = list(range(xmin, xmax))
@@ -179,7 +179,7 @@ class Torneio(object):
         return recompensa, cacadas
 
     def checa_fim(self):
-        if len(self.jogadores) == 1:
+        if len(self.jogadores) <= 1:
             return True
         return False
 
@@ -201,7 +201,7 @@ class Torneio(object):
         g.close()
 
     def anuncia_vencedor(self):
-        self.monitor()
+        self.monitor(fim=True)
         ranking1 = [(nome, data["comida"][-1]) for nome,data in self.historico.items() if (data["comida"][-1]>0 and nome not in self.cemiterio and nome not in self.bugados)]
         ranking = sorted(ranking1, key=lambda x: x[1], reverse=True)
         print ("Sobreviventes:")

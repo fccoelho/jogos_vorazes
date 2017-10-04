@@ -18,6 +18,8 @@ Logo, a cada rodada do jogo, cada jogador tem de sair em caçada com cada outro 
  
  Portanto se o caçador caçar e seu companheiro também ambos, têm saldo **0** ao final. Se o caçador descansar enquanto o seu companheiro caça, o que descansou tem um saldo de **1** ao fimda caçada enquanto que seu companheiro tem um saldo negativo de **3**. Se ambos descansarem. Ambos perdem 2 pontos de energia.
 
+ Ao final de cada Rodada de caçada, se o número de caçadores for maior do que $M~Uniform(0,n*(n-1))$ onde $n$ é o número de jogadores vivos, todos os menbros da tribo recebemuma recompensa de comida de $2*(n-1)$.
+
 
 ### Agradecimentos
 
