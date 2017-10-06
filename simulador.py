@@ -242,8 +242,8 @@ if __name__ == "__main__":
     T.inicializa_jogadores()
     R = open("recompensa.csv", "a")
     T.vai(200000)
-    #R.close()
-    # T.plota_series()
+    R.close()
+    T.plota_series()
     P.show()
 
 
