@@ -9,6 +9,8 @@ import random
 import copy
 import os
 import pandas as pd
+import matplotlib
+matplotlib.use ('Agg')
 import matplotlib.pyplot as P
 from liveplots.xmlrpcserver import rpc_plot
 import xmlrpc.client
