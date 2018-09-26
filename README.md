@@ -29,8 +29,25 @@ Portanto:
 + Se o caçador descansar enquanto o seu companheiro caça, o que descansou tem um saldo de **1** e seu companheiro tem um saldo de **-3** ao final. 
 + Se ambos descansarem, ambos têm saldo de **-2** pontos de energia.
 
- Ao final de cada Rodada de caçada, se o número de caçadores for maior do que $ M~Uniform(0,n*(n-1)) $ onde $ n $ é o número de jogadores vivos, todos os menbros da tribo recebem uma recompensa de comida de $ 2*(n-1) $.
+ Ao final de cada Rodada de caçada, se o número de caçadores for maior do que: 
+ 
+ <a href="http://www.codecogs.com/eqnedit.php?latex=M&space;~&space;Uniform(0,n*(n-1))" target="_blank"><img src="http://latex.codecogs.com/gif.latex?M&space;~&space;Uniform(0,n*(n-1))" title="M ~ Uniform(0,n*(n-1))" /></a>
+ 
+ onde n é o número de jogadores vivos, todos os menbros da tribo recebem uma recompensa de comida de 
+ 
+ <a href="http://www.codecogs.com/eqnedit.php?latex=$&space;2*(n-1)&space;$" target="_blank"><img src="http://latex.codecogs.com/gif.latex?$&space;2*(n-1)&space;$" title="$ 2*(n-1) $" /></a>
+ 
+Os jogadores vão acumulando uma variável "reputação", que é definida por:
 
+<a href="http://www.codecogs.com/eqnedit.php?latex=reputacao&space;=&space;\frac{cacas}{cacas&space;&plus;&space;descansos}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?reputacao&space;=&space;\frac{cacas}{cacas&space;&plus;&space;descansos}" title="reputacao = \frac{cacas}{cacas + descansos}" /></a>
+
+A cada rodada, são recebidas pelos jogadores as seguintes informações:
+
++ Número da rodada
++ Reputação dos caçadores (em ordem aleatória)
++ Valor M sorteado 
+
+Deve-se retornar ao simulador do torneio suas escolhas de caça para cada um dos outros membros da tribo, na ordem recebida. 
 
 ### Agradecimentos
 
