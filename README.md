@@ -19,21 +19,21 @@ Logo, a cada rodada do jogo, cada jogador tem de sair em caçada com cada um dos
 
 Ao final da caçada a caça é dividida igualmente entre os caçadores. 
 
-+ Uma caçada com um caçador gera 12 pontos de energia
-+ Uma caçada com um jogador gera 6 pontos de energia
-+ Se nenhum jogador caça, não é gerado nenhum ponto de energia.
++ Uma caçada com dois caçadores gera 12 pontos de energia
++ Uma caçada com um caçador gera 6 pontos de energia
++ Se nenhum jogador escolhe caçar, não é gerado nenhum ponto de energia.
 
 Portanto:
 
 + Se o caçador caçar e seu companheiro também caçar, ambos têm saldo **0** ao final. 
 + Se o caçador descansar enquanto o seu companheiro caça, o que descansou tem um saldo de **1** e seu companheiro tem um saldo de **-3** ao final. 
-+ Se ambos descansarem, ambos têm saldo de **-2** pontos de energia.
++ Se ambos descansarem, ambos têm saldo de **-2** pontos de energia ao final.
 
- Ao final de cada Rodada de caçada, se o número de caçadores for maior do que: 
+ Ao final de cada rodada de caçadas, se o número de caçadores for maior do que: 
  
  <a href="http://www.codecogs.com/eqnedit.php?latex=M&space;~&space;Uniform(0,n*(n-1))" target="_blank"><img src="http://latex.codecogs.com/gif.latex?M&space;~&space;Uniform(0,n*(n-1))" title="M ~ Uniform(0,n*(n-1))" /></a>
  
- onde n é o número de jogadores vivos, todos os menbros da tribo recebem uma recompensa de comida de 
+ onde n é o número de jogadores vivos, todos os menbros da tribo recebem uma recompensa de comida com tamanho: 
  
  <a href="http://www.codecogs.com/eqnedit.php?latex=$&space;2*(n-1)&space;$" target="_blank"><img src="http://latex.codecogs.com/gif.latex?$&space;2*(n-1)&space;$" title="$ 2*(n-1) $" /></a>
  
