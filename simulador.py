@@ -245,12 +245,9 @@ if __name__ == "__main__":
     T = Torneio()
     T.inicializa_jogadores(comida=30.0)
     R = open("recompensa.csv", "a")
-    T.vai(max_rodadas=2000)
+    T.vai(max_rodadas=200)
     R.close()
     T.plota_series()
     P.show()
-
-
-
 
 

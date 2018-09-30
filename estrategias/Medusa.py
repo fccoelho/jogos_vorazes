@@ -22,13 +22,13 @@ class MeuJogador(Jogador):
                 else:
                     escolhas.append('c')
                         
-       elif comida_atual < 60 * ((len(reputacoes_dos_jogadores) - 1) *(-2)) and reputacao_atual < media:
+        elif comida_atual < 60 * ((len(reputacoes_dos_jogadores) - 1) *(-2)) and reputacao_atual < media:
             for rep in reputacoes_dos_jogadores:
                 if (rep >= media):
                     escolhas.append('d')
                 else:
                     escolhas.append('c')
-       else:
-           escolhas = ['c' for i in reputacoes_dos_jogadores]
+        else:
+            escolhas = ['c' for i in reputacoes_dos_jogadores]
 
-       return escolhas
+        return escolhas
