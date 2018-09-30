@@ -4,6 +4,8 @@ __author__ = 'fccoelho'
 
 import pkgutil
 import importlib
+import logging
+import traceback
 from collections import defaultdict
 import random
 import copy
@@ -39,10 +41,10 @@ class Torneio(object):
             return 0
         return len(self.jogadores)
 
-    def inicializa_jogadores(self):
+    def inicializa_jogadores(self, comida=300.0):
         self.jogadores = {x : importlib.import_module("estrategias.{}".format(x)).MeuJogador() for x in jogadores}
         for nome, jogador in self.jogadores.items():
-            self.historico[nome]["comida"].append(300.0*(self.p-1))
+            self.historico[nome]["comida"].append(comida*(self.p-1))
             self.historico[nome]["reputacao"].append(0.)
         self.inicializa_saida()
 
@@ -62,7 +64,7 @@ class Torneio(object):
 
         """
         self.rodada += 1
-        if self.rodada%500 == 0:
+        if self.rodada%50 == 0:
             print("Iniciando Rodada {}".format(self.rodada))
         jogadores_randomizados = [jog for jog in self.jogadores.keys() if jog not in self.bugados]
         random.shuffle(jogadores_randomizados)
@@ -80,12 +82,15 @@ class Torneio(object):
                                       self.historico[nome]["reputacao"][-1],
                                       m, reputacoes), tuple(adversarios))
             except Exception as e:
-                escolhas[nome] = (['c' for i in reputacoes],adversarios)
+                #logging.error(traceback.format_exc())
+                #print(e.__doc__)
+                #print(e.message)
+                escolhas[nome] = (['c' for i in reputacoes], adversarios)
                 self.bugados[nome] = (self.rodada, e)
                 self.cemiterio[nome] = self.rodada
                 
-            self.historico[nome]["cacou"] += sum(e == 'c' for e in escolhas[nome][0])
-            self.historico[nome]["descansou"] += sum(e == 'd' for e in escolhas[nome][0])
+            self.historico[nome]["cacou"] += sum([e == 'c' for e in escolhas[nome][0]])
+            self.historico[nome]["descansou"] += sum([e == 'd' for e in escolhas[nome][0]])
         saldo = self.calcula_resultado_cacadas(escolhas)
         recompensa, cacadas = self.calcula_recompensa(escolhas)
         
@@ -110,9 +115,8 @@ class Torneio(object):
         :return:
         """
         window_size = 2000
-        if self.rodada % 500 == 0 or fim:
-            com_series = [self.historico[nome]["comida"][-window_size:] for nome in jogadores] #if
-                         # nome not in self.cemiterio]
+        if self.rodada % 200 == 0 or fim:
+            com_series = [self.historico[nome]["comida"][-window_size:] for nome in jogadores] #if nome not in self.cemiterio]
             jogs = [j for j in jogadores ]#if j not in self.cemiterio]
             xmin = self.rodada-window_size if self.rodada >= window_size else 0
             xmax = self.rodada+window_size if self.rodada >= window_size else self.rodada
@@ -166,14 +170,14 @@ class Torneio(object):
     def enterra(self, nome, comida=0):
         del self.jogadores[nome]
         # self.historico[nome]["comida"].append(0.0) # Add an extra food item to maintain equal numbers of items
-        print("Restam {} jogadores".format(len(self.jogadores)))
         self.cemiterio[nome] = self.rodada
         print("{} Morreu na rodada {} com {} pontos".format(nome, self.rodada, comida))
+        print("Restam {} jogadores".format(len(self.jogadores)))
 
     def calcula_recompensa(self, escolhas):
         cacadas = 0
         for e in escolhas.items():
-            cacadas += sum([i == 'c' for i in e[1][0]]) # numero de vezes que este jogador cacou
+            cacadas += sum([i == 'c' for i in e[1][0]]) # number of times this player has hunted
         recompensa = 2*(self.p - 1) if cacadas > self.M[-1] else 0
         self.recompensa.append(recompensa)
         return recompensa, cacadas
@@ -239,9 +243,9 @@ class Torneio(object):
 
 if __name__ == "__main__":
     T = Torneio()
-    T.inicializa_jogadores()
+    T.inicializa_jogadores(comida=30.0)
     R = open("recompensa.csv", "a")
-    T.vai(200000)
+    T.vai(max_rodadas=2000)
     R.close()
     T.plota_series()
     P.show()
