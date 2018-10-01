@@ -12,7 +12,7 @@ class MeuJogador(Jogador):
         ultimaescolha = 1
         self.reputacao_atual_copia = reputacao_atual
         reputacoes_copia = reputacoes_dos_jogadores
-        reputacoes_ordenadas = reputacoes_copia
+        reputacoes_ordenadas = list(reputacoes_copia)
         reputacoes_ordenadas.sort()
         p_min = reputacoes_ordenadas[int((len(reputacoes_ordenadas)*self.reputacao_minima_aceitavel))] #numero que define quem eu nao caco (baixa reputacao)
         p_max = reputacoes_ordenadas[int((len(reputacoes_ordenadas)*(self.reputacao_minima_aceitavel+self.reputacao_meta)))] #numero que define quem eu nao caco (alta reputacao)

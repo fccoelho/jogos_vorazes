@@ -5,7 +5,7 @@ class MeuJogador(Jogador):
         escolhas = []
         ultimaescolha = 1
         reputacoes_copia = reputacoes_dos_jogadores
-        reputacoes_ordenadas = reputacoes_copia
+        reputacoes_ordenadas = list(reputacoes_copia)
         reputacoes_ordenadas.sort()
         p_30 = reputacoes_ordenadas[int((len(reputacoes_ordenadas)*0.30)-1)] #numero que define quem eu nao caco (baixa reputacao)
         p_80 = reputacoes_ordenadas[int((len(reputacoes_ordenadas)*0.80)-1)] #numero que define quem eu nao caco (alta reputacao)

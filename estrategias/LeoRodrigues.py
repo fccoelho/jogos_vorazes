@@ -26,19 +26,17 @@ class MeuJogador(Jogador):
         reput_oder = sorted(reputacoes_dos_jogadores)
         if comida_atual > 50:
             if rodada < 10:
-                escolhas = ['c' if reput_oder > reput_oder[self.percent(reput_oder,0.25)-1] and reput_oder < reput_oder[self.percent(reput_oder,0.75)-1]  else 'd' for i in reput_oder]  
+                #print(reput_oder)
+                escolhas = ['c' if max(reput_oder) > reput_oder[self.percent(reput_oder,0.25)-1] and min(reput_oder) < reput_oder[self.percent(reput_oder,0.75)-1]  else 'd' for i in reput_oder]
                 return escolhas
             else:
                   
                 if float(sum(reput_oder))/float(len(reput_oder)) >= 0.55:
-                
-                    escolhas = ['c' if reput_oder > reput_oder[self.percent(reput_oder,0.20)-1] else 'd'  for i in reputacoes_dos_jogadores] 
+                    escolhas = ['c' if max(reput_oder) > reput_oder[self.percent(reput_oder,0.20)-1] else 'd' for i in reputacoes_dos_jogadores]
                 else:
-                    escolhas = ['c' if reput_oder > reput_oder[self.percent(reput_oder,0.40)-1] and reput_oder < reput_oder[self.percent(reput_oder,0.60)-1]  else 'd' for i in reput_oder]        
+                    escolhas = ['c' if max(reput_oder) > reput_oder[self.percent(reput_oder,0.40)-1] and min(reput_oder) < reput_oder[self.percent(reput_oder,0.60)-1]  else 'd' for i in reput_oder]
                 return escolhas
         
         else:
             escolhas = ['d' for i in reput_oder]
             return escolhas
-        
-        
