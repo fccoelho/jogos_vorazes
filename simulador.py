@@ -10,12 +10,14 @@ from collections import defaultdict
 import random
 import copy
 import os
+import numpy as np
 import pandas as pd
-import matplotlib
-matplotlib.use ('Agg')
-import matplotlib.pyplot as P
 from liveplots.xmlrpcserver import rpc_plot
 import xmlrpc.client
+import matplotlib
+import matplotlib.pyplot as P
+matplotlib.use ('Agg')
+
 
 jogadores = [name for _,name,_ in pkgutil.iter_modules(['estrategias'])]
 jogadores.remove('jogadores')
