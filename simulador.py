@@ -100,7 +100,6 @@ class Torneio(object):
         
         R.write(str(recompensa) + "\n")
         for nome, jogador in self.jogadores.items():
-            jogador.resultado_da_cacada(saldo)
             jogador.fim_da_rodada(recompensa, self.M[-1], cacadas)
         self.atualiza_reputacao()
         self.atualiza_comida(saldo, recompensa)
