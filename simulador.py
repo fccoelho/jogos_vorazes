@@ -10,12 +10,14 @@ from collections import defaultdict
 import random
 import copy
 import os
+import numpy as np
 import pandas as pd
-import matplotlib
-matplotlib.use ('Agg')
-import matplotlib.pyplot as P
 from liveplots.xmlrpcserver import rpc_plot
 import xmlrpc.client
+import matplotlib
+import matplotlib.pyplot as P
+matplotlib.use ('Agg')
+
 
 jogadores = [name for _,name,_ in pkgutil.iter_modules(['estrategias'])]
 jogadores.remove('jogadores')
@@ -98,7 +100,6 @@ class Torneio(object):
         
         R.write(str(recompensa) + "\n")
         for nome, jogador in self.jogadores.items():
-            jogador.resultado_da_cacada(saldo)
             jogador.fim_da_rodada(recompensa, self.M[-1], cacadas)
         self.atualiza_reputacao()
         self.atualiza_comida(saldo, recompensa)
@@ -117,7 +118,7 @@ class Torneio(object):
         :return:
         """
         window_size = 2000
-        if self.rodada % 200 == 0 or fim:
+        if self.rodada % 1000 == 0 or fim:
             com_series = [self.historico[nome]["comida"][-window_size:] for nome in jogadores] #if nome not in self.cemiterio]
             jogs = [j for j in jogadores ]#if j not in self.cemiterio]
             xmin = self.rodada-window_size if self.rodada >= window_size else 0
@@ -245,9 +246,9 @@ class Torneio(object):
 
 if __name__ == "__main__":
     T = Torneio()
-    T.inicializa_jogadores(comida=30.0)
+    T.inicializa_jogadores(comida=20.0)
     R = open("recompensa.csv", "a")
-    T.vai(max_rodadas=200)
+    T.vai(max_rodadas=2000)
     R.close()
     T.plota_series()
     #P.show()
