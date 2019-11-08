@@ -56,6 +56,6 @@ Suas estratégias estão preservadas neste repositório.
 
 Este jogo está licenciado sob a licença MIT.
 
-Se você utiliza e material e gostaria de citá-lo, por favor use a seguinte referência:
+Se você utiliza este material e gostaria de citá-lo, por favor use a seguinte referência:
 
 **Coelho, Flavio codeço, & Souza, Renato Rocha. (2017, October 2). Jogos Vorazes. Zenodo. http://doi.org/10.5281/zenodo.1000761** 
