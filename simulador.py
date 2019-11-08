@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
-# coding: utf8
 __author__ = 'fccoelho'
 
 import pkgutil
 import importlib
 import logging
-import traceback
 from collections import defaultdict
 import random
 import copy
 import os
-import numpy as np
 import pandas as pd
 from liveplots.xmlrpcserver import rpc_plot
 import xmlrpc.client
